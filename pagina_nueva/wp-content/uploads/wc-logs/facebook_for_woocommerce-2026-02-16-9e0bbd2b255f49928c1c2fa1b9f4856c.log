@@ -1,0 +1,71 @@
+2026-02-16T00:53:00+00:00 WARNING Product feed scheduling failed: Integration not configured. : {"flow_name":"product_feed","flow_step":"schedule_feed_generation"}
+2026-02-16T00:53:00+00:00 WARNING Language override feed scheduling failed: Integration not configured. : {"flow_name":"language_override_feed","flow_step":"schedule_feed_generation"}
+2026-02-16T00:53:01+00:00 ERROR Error persisting error logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T00:55:31+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T00:57:52+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T01:01:34+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T01:08:54+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T01:12:08+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T01:18:31+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T01:21:58+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T01:26:46+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T01:32:57+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T01:38:33+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T01:43:46+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T01:46:47+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T01:51:45+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T01:56:20+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T02:01:15+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T02:06:45+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T02:11:44+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T02:16:45+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T02:21:46+00:00 WARNING Product feed scheduling failed: Integration not configured. : {"flow_name":"product_feed","flow_step":"schedule_feed_generation"}
+2026-02-16T02:21:46+00:00 WARNING Language override feed scheduling failed: Integration not configured. : {"flow_name":"language_override_feed","flow_step":"schedule_feed_generation"}
+2026-02-16T02:21:46+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T02:26:00+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T02:32:03+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T02:36:31+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T02:40:59+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T02:46:38+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T02:51:07+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T02:56:45+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T03:01:33+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T03:06:44+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T03:11:49+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T03:16:48+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T03:22:19+00:00 WARNING Product feed scheduling failed: Integration not configured. : {"flow_name":"product_feed","flow_step":"schedule_feed_generation"}
+2026-02-16T03:22:19+00:00 WARNING Language override feed scheduling failed: Integration not configured. : {"flow_name":"language_override_feed","flow_step":"schedule_feed_generation"}
+2026-02-16T03:22:19+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T03:24:30+00:00 NOTICE There was an error trying to get product set data in a catalog: No se puede crear la instancia de la API porque falta el token de acceso.
+2026-02-16T03:24:30+00:00 ERROR ProductSetSync exception: exception_code : 0; exception_class : WooCommerce\Facebook\Framework\Api\Exception: exception_message : No se puede crear la instancia de la API porque falta el token de acceso.; exception_trace : #0 C:\xampp\htdocs\unidad1_n\pagina_nueva\wp-content\plugins\facebook-for-woocommerce\includes\ProductSets\ProductSetSync.php(139): WC_Facebookcommerce->get_api()
+#1 C:\xampp\htdocs\unidad1_n\pagina_nueva\wp-content\plugins\facebook-for-woocommerce\includes\ProductSets\ProductSetSync.php(65): WooCommerce\Facebook\ProductSets\ProductSetSync->get_fb_product_set_id(Object(WP_Term))
+#2 C:\xampp\htdocs\unidad1_n\pagina_nueva\wp-includes\class-wp-hook.php(341): WooCommerce\Facebook\ProductSets\ProductSetSync->on_create_or_update_product_wc_category_callback(80, 80, Array)
+#3 C:\xampp\htdocs\unidad1_n\pagina_nueva\wp-includes\class-wp-hook.php(365): WP_Hook->apply_filters('', Array)
+#4 C:\xampp\htdocs\unidad1_n\pagina_nueva\wp-includes\plugin.php(522): WP_Hook->do_action(Array)
+#5 C:\xampp\htdocs\unidad1_n\pagina_nueva\wp-includes\taxonomy.php(2697): do_action('create_product_...', 80, 80, Array)
+#6 C:\xampp\htdocs\unidad1_n\pagina_nueva\wp-admin\includes\ajax-actions.php(623): wp_insert_term('Ni\xC3\xB1os', 'product_cat', Array)
+#7 C:\xampp\htdocs\unidad1_n\pagina_nueva\wp-includes\class-wp-hook.php(341): _wp_ajax_add_hierarchical_term('')
+#8 C:\xampp\htdocs\unidad1_n\pagina_nueva\wp-includes\class-wp-hook.php(365): WP_Hook->apply_filters('', Array)
+#9 C:\xampp\htdocs\unidad1_n\pagina_nueva\wp-includes\plugin.php(522): WP_Hook->do_action(Array)
+#10 C:\xampp\htdocs\unidad1_n\pagina_nueva\wp-admin\admin-ajax.php(192): do_action('wp_ajax_add-pro...')
+#11 {main}
+2026-02-16T03:26:03+00:00 NOTICE Ha habido un error al intentar sincronizar los productos usando la API de catálogos en lotes para la tarea 6d03c3e641d496c6a31ed8614c94325f: No se puede crear la instancia de la API porque falta el token de acceso.
+2026-02-16T03:26:24+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T03:32:49+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T03:34:07+00:00 NOTICE Ha habido un error al intentar sincronizar los productos usando la API de catálogos en lotes para la tarea bb79b7c277d33a41f0a70581629e732b: No se puede crear la instancia de la API porque falta el token de acceso.
+2026-02-16T03:37:27+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T03:38:47+00:00 NOTICE Ha habido un error al intentar sincronizar los productos usando la API de catálogos en lotes para la tarea 3c0f1b880bbfffef4af93663ba607bfd: No se puede crear la instancia de la API porque falta el token de acceso.
+2026-02-16T03:43:37+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T03:45:43+00:00 NOTICE Ha habido un error al intentar sincronizar los productos usando la API de catálogos en lotes para la tarea f0b1e2aed43ba94274430d930b67495c: No se puede crear la instancia de la API porque falta el token de acceso.
+2026-02-16T03:46:51+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T03:51:47+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T03:53:51+00:00 NOTICE Ha habido un error al intentar sincronizar los productos usando la API de catálogos en lotes para la tarea 1fd345a0aff844e7d4b69bc9d8c979e7: No se puede crear la instancia de la API porque falta el token de acceso.
+2026-02-16T03:56:47+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T04:04:09+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T04:06:10+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T05:00:10+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T05:00:45+00:00 WARNING Product feed scheduling failed: Integration not configured. : {"flow_name":"product_feed","flow_step":"schedule_feed_generation"}
+2026-02-16T05:00:45+00:00 WARNING Language override feed scheduling failed: Integration not configured. : {"flow_name":"language_override_feed","flow_step":"schedule_feed_generation"}
+2026-02-16T05:00:45+00:00 ERROR Error persisting error logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T05:01:48+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
+2026-02-16T05:06:15+00:00 ERROR Error persisting Meta logs: No se puede crear la instancia de la API porque falta el token de acceso. : []
