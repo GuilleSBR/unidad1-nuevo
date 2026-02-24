@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Control de médicos</title>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">Clínica (Demo)</div>
+      <nav class="nav">
+        <a href="./dashboard.html" data-nav="dashboard">Dashboard</a>
+<a href="./pacientes.html" data-nav="pacientes">Control de pacientes</a>
+<a href="./agenda.html" data-nav="agenda">Control de agenda</a>
+<a href="./medicos.html" data-nav="medicos">Control de médicos</a>
+<a href="./especialidades.html" data-nav="especialidades">Especialidades médicas</a>
+<a href="./tarifas.html" data-nav="tarifas">Gestor de tarifas</a>
+<a href="./pagos.html" data-nav="pagos">Pagos</a>
+<a href="./reportes.html" data-nav="reportes">Reportes</a>
+<a href="./bitacoras.html" data-nav="bitacoras">Bitácoras de usuarios</a>
+      </nav>
+      <div style="margin-top:12px;">
+        <button class="btn" id="btnLogout">Cerrar sesión</button>
+        <div class="small" id="whoami" style="margin-top:8px;"></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <h1>Control de médicos</h1>
+      </div>
+
+      
+<div class="card">
+  <div style="font-weight:700;margin-bottom:8px;">Agregar / Editar médico</div>
+  <form id="frmMed">
+    <input type="hidden" id="m_id" />
+    <div class="grid">
+      <div class="field">
+        <label>Nombre completo</label>
+        <input id="m_nombre" required />
+      </div>
+      <div class="field">
+        <label>Cédula</label>
+        <input id="m_cedula" />
+      </div>
+      <div class="field">
+        <label>Especialidad</label>
+        <select id="m_esp"></select>
+      </div>
+      <div class="field">
+        <label>Teléfono</label>
+        <input id="m_tel" />
+      </div>
+      <div class="field">
+        <label>Correo</label>
+        <input id="m_correo" type="email" />
+      </div>
+      <div class="field">
+        <label>Horario</label>
+        <input id="m_horario" placeholder="Ej. L-V 9:00-14:00" />
+      </div>
+      <div class="field">
+        <label>Estatus</label>
+        <select id="m_status">
+          <option>Activo</option>
+          <option>Inactivo</option>
+        </select>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" type="submit">Guardar</button>
+      <button class="btn" type="button" id="m_limpiar">Limpiar</button>
+    </div>
+    <div class="small" id="m_msg"></div>
+  </form>
+</div>
+
+<div class="card">
+  <div style="font-weight:700;margin-bottom:8px;">Lista</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Nombre</th><th>Cédula</th><th>Especialidad</th><th>Teléfono</th><th>Estatus</th><th>Acciones</th></tr></thead>
+      <tbody id="tbMed">
+        </tbody>
+    </table>
+  </div>
+</div>
+
+    </main>
+  </div>
+
+  <script src="../js/app.js"></script>
+  <script>
+    requireAuth();
+    setActiveNav("medicos");
+    document.getElementById("whoami").textContent = "";
+    document.getElementById("btnLogout").addEventListener("click", logout);
+  </script>
+  
+<script>
+  const $ = (id) => document.getElementById(id);
+  const frm = $("frmMed");
+  const tb = $("tbMed");
+  const msg = $("m_msg");
+
+  function renderEspOptions() {
+    const esp = list(STORAGE.ESPECIALIDADES);
+    $("m_esp").innerHTML = esp.map(e => `<option>${e.nombre}</option>`).join("");
+  }
+
+  function limpiar() {
+    $("m_id").value = "";
+    frm.reset();
+    msg.textContent = "";
+    renderEspOptions();
+  }
+
+  function render() {
+    const esp = list(STORAGE.ESPECIALIDADES);
+    const items = list(STORAGE.MEDICOS);
+    tb.innerHTML = items.map(x => {
+      const e = byId(esp, x.especialidadId);
+      return `
+        <tr>
+          <td>${x.nombre}</td>
+          <td>${x.cedula || ""}</td>
+          <td>${e ? e.nombre : "-"}</td>
+          <td>${x.telefono || ""}</td>
+          <td><span class="pill">${x.estatus ? "Activo" : "Inactivo"}</span></td>
+          <td>
+            <button class="btn" onclick="editMed('${x.id}')">Editar</button>
+            <button class="btn danger" onclick="delMed('${x.id}')">Eliminar</button>
+          </td>
+        </tr>
+      `;
+    }).join("") || `<tr><td colspan="6" class="small">Sin registros</td></tr>`;
+  }
+
+  window.editMed = (id) => {
+    const x = byId(list(STORAGE.MEDICOS), id);
+    if (!x) return;
+    renderEspOptions();
+    $("m_id").value = x.id;
+    $("m_nombre").value = x.nombre;
+    $("m_cedula").value = x.cedula || "";
+    $("m_esp").value = x.especialidadId || "";
+    $("m_tel").value = x.telefono || "";
+    $("m_correo").value = x.correo || "";
+    $("m_horario").value = x.horario || "";
+    $("m_status").value = x.estatus ? "1" : "0";
+    msg.textContent = "Editando...";
+  };
+
+  window.delMed = (id) => {
+    if (!confirm("¿Eliminar médico?")) return;
+    removeById(STORAGE.MEDICOS, id);
+    logAction("Eliminó médico " + id, "Médicos");
+    render();
+  };
+
+  frm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const id = $("m_id").value || uid("m");
+    const item = {
+      id,
+      nombre: $("m_nombre").value.trim(),
+      cedula: $("m_cedula").value.trim(),
+      especialidadId: $("m_esp").value || null,
+      telefono: $("m_tel").value.trim(),
+      correo: $("m_correo").value.trim(),
+      horario: $("m_horario").value.trim(),
+      estatus: $("m_status").value === "1",
+      fechaIngreso: nowISO(),
+    };
+    upsert(STORAGE.MEDICOS, item);
+    logAction((($("m_id").value) ? "Actualizó" : "Agregó") + " médico " + item.nombre, "Médicos");
+    msg.textContent = "Guardado ✅";
+    limpiar();
+    render();
+  });
+
+  $("m_limpiar").addEventListener("click", limpiar);
+
+  renderEspOptions();
+  render();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pagos</title>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">Clínica (Demo)</div>
+      <nav class="nav">
+        <a href="./dashboard.html" data-nav="dashboard">Dashboard</a>
+<a href="./pacientes.html" data-nav="pacientes">Control de pacientes</a>
+<a href="./agenda.html" data-nav="agenda">Control de agenda</a>
+<a href="./medicos.html" data-nav="medicos">Control de médicos</a>
+<a href="./especialidades.html" data-nav="especialidades">Especialidades médicas</a>
+<a href="./tarifas.html" data-nav="tarifas">Gestor de tarifas</a>
+<a href="./pagos.html" data-nav="pagos">Pagos</a>
+<a href="./reportes.html" data-nav="reportes">Reportes</a>
+<a href="./bitacoras.html" data-nav="bitacoras">Bitácoras de usuarios</a>
+      </nav>
+      <div style="margin-top:12px;">
+        <button class="btn" id="btnLogout">Cerrar sesión</button>
+        <div class="small" id="whoami" style="margin-top:8px;"></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <h1>Pagos</h1>
+      </div>
+
+      
+<div class="card">
+  <div style="font-weight:700;margin-bottom:8px;">Registrar pago</div>
+  <form id="frmPago">
+    <div class="grid">
+      <div class="field">
+        <label>Cita</label>
+        <select id="pago_cita"></select>
+      </div>
+      <div class="field">
+        <label>Tarifa</label>
+        <select id="pago_tarifa"></select>
+      </div>
+      <div class="field">
+        <label>Monto</label>
+        <input id="pago_monto" type="number" step="0.01" />
+      </div>
+      <div class="field">
+        <label>Método</label>
+        <select id="pago_metodo">
+          <option>Efectivo</option>
+          <option>Tarjeta</option>
+          <option>Transferencia</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Referencia</label>
+        <input id="pago_ref" placeholder="Opcional" />
+      </div>
+      <div class="field">
+        <label>Estatus</label>
+        <select id="pago_status">
+          <option>Pagado</option>
+          <option>Pendiente</option>
+          <option>Cancelado</option>
+        </select>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" type="submit">Guardar pago</button>
+      <button class="btn" type="button" id="pago_limpiar">Limpiar</button>
+    </div>
+    <div class="small" id="pago_info"></div>
+  </form>
+</div>
+
+<div class="card">
+  <div style="font-weight:700;margin-bottom:8px;">Pagos</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Fecha</th><th>Paciente</th><th>Cita</th><th>Servicio</th><th>Monto</th><th>Método</th><th>Estatus</th><th>Acciones</th></tr></thead>
+      <tbody id="tbPagos">
+        </tbody>
+    </table>
+  </div>
+</div>
+
+    </main>
+  </div>
+
+  <script src="../js/app.js"></script>
+  <script>
+    requireAuth();
+    setActiveNav("pagos");
+    document.getElementById("whoami").textContent = "";
+    document.getElementById("btnLogout").addEventListener("click", logout);
+  </script>
+  
+<script>
+  const $ = (id) => document.getElementById(id);
+  const frm = $("frmPago");
+  const tb = $("tbPagos");
+  const info = $("pago_info");
+
+  function renderOptions() {
+    const pacientes = list(STORAGE.PACIENTES);
+    const medicos = list(STORAGE.MEDICOS);
+    const citas = list(STORAGE.CITAS);
+    const tarifas = list(STORAGE.TARIFAS).filter(t => t.estatus);
+
+    $("pago_tarifa").innerHTML = tarifas.map(t => `<option data-costo="${t.costo}">${t.descripcion} ($${Number(t.costo).toFixed(2)})</option>`).join("");
+
+    $("pago_cita").innerHTML = citas.map(c => {
+      const p = byId(pacientes, c.pacienteId);
+      const m = byId(medicos, c.medicoId);
+      return `<option>${new Date(c.fechaCita).toLocaleString()} - ${p ? p.nombre : "-"} / ${m ? m.nombre : "-"}</option>`;
+    }).join("");
+
+    // auto monto
+    const opt = $("pago_tarifa").selectedOptions[0];
+    if (opt) $("pago_monto").value = opt.getAttribute("data-costo");
+    updateInfo();
+  }
+
+  function updateInfo() {
+    const pacientes = list(STORAGE.PACIENTES);
+    const citas = list(STORAGE.CITAS);
+    const tarifas = list(STORAGE.TARIFAS);
+
+    const cita = byId(citas, $("pago_cita").value);
+    const tarifa = byId(tarifas, $("pago_tarifa").value);
+    const pac = cita ? byId(pacientes, cita.pacienteId) : null;
+
+    info.textContent = pac && tarifa ? `Paciente: ${pac.nombre} | Servicio: ${tarifa.descripcion}` : "";
+  }
+
+  function limpiar() {
+    frm.reset();
+    renderOptions();
+    info.textContent = "";
+  }
+
+  function render() {
+    const pacientes = list(STORAGE.PACIENTES);
+    const citas = list(STORAGE.CITAS);
+    const tarifas = list(STORAGE.TARIFAS);
+    const pagos = list(STORAGE.PAGOS);
+
+    tb.innerHTML = pagos.map(p => {
+      const c = byId(citas, p.citaId);
+      const pac = c ? byId(pacientes, c.pacienteId) : null;
+      const t = byId(tarifas, p.tarifaId);
+      return `
+        <tr>
+          <td>${new Date(p.fechaPago).toLocaleString()}</td>
+          <td>${pac ? pac.nombre : "-"}</td>
+          <td>${c ? new Date(c.fechaCita).toLocaleString() : "-"}</td>
+          <td>${t ? t.descripcion : "-"}</td>
+          <td>$${Number(p.monto).toFixed(2)}</td>
+          <td>${p.metodo}</td>
+          <td><span class="pill">${p.estatus}</span></td>
+          <td><button class="btn danger" onclick="delPago('${p.id}')">Eliminar</button></td>
+        </tr>
+      `;
+    }).join("") || `<tr><td colspan="8" class="small">Sin registros</td></tr>`;
+  }
+
+  window.delPago = (id) => {
+    if (!confirm("¿Eliminar pago?")) return;
+    removeById(STORAGE.PAGOS, id);
+    logAction("Eliminó pago " + id, "Pagos");
+    render();
+  };
+
+  $("pago_tarifa").addEventListener("change", () => {
+    const opt = $("pago_tarifa").selectedOptions[0];
+    if (opt) $("pago_monto").value = opt.getAttribute("data-costo");
+    updateInfo();
+  });
+  $("pago_cita").addEventListener("change", updateInfo);
+
+  frm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const item = {
+      id: uid("pay"),
+      citaId: $("pago_cita").value,
+      tarifaId: $("pago_tarifa").value,
+      monto: Number($("pago_monto").value || 0),
+      metodo: $("pago_metodo").value,
+      fechaPago: nowISO(),
+      referencia: $("pago_ref").value.trim(),
+      estatus: $("pago_status").value,
+    };
+    upsert(STORAGE.PAGOS, item);
+    logAction("Registró pago " + item.id, "Pagos");
+    info.textContent = "Pago guardado ✅";
+    render();
+  });
+
+  $("pago_limpiar").addEventListener("click", limpiar);
+
+  renderOptions();
+  render();
+</script>
+
+</body>
+</html>

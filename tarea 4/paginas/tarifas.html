@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestor de tarifas</title>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">Clínica (Demo)</div>
+      <nav class="nav">
+        <a href="./dashboard.html" data-nav="dashboard">Dashboard</a>
+<a href="./pacientes.html" data-nav="pacientes">Control de pacientes</a>
+<a href="./agenda.html" data-nav="agenda">Control de agenda</a>
+<a href="./medicos.html" data-nav="medicos">Control de médicos</a>
+<a href="./especialidades.html" data-nav="especialidades">Especialidades médicas</a>
+<a href="./tarifas.html" data-nav="tarifas">Gestor de tarifas</a>
+<a href="./pagos.html" data-nav="pagos">Pagos</a>
+<a href="./reportes.html" data-nav="reportes">Reportes</a>
+<a href="./bitacoras.html" data-nav="bitacoras">Bitácoras de usuarios</a>
+      </nav>
+      <div style="margin-top:12px;">
+        <button class="btn" id="btnLogout">Cerrar sesión</button>
+        <div class="small" id="whoami" style="margin-top:8px;"></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <h1>Gestor de tarifas</h1>
+      </div>
+
+      
+<div class="card">
+  <div style="font-weight:700;margin-bottom:8px;">Agregar / Editar tarifa</div>
+  <form id="frmTar">
+    <input type="hidden" id="t_id" />
+    <div class="grid">
+      <div class="field">
+        <label>Descripción del servicio</label>
+        <input id="t_desc" required />
+      </div>
+      <div class="field">
+        <label>Costo</label>
+        <input id="t_costo" type="number" step="0.01" required />
+      </div>
+      <div class="field">
+        <label>Especialidad (opcional)</label>
+        <select id="t_esp">
+          <option>(Sin especialidad)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Estatus</label>
+        <select id="t_status">
+          <option>Activa</option>
+          <option>Inactiva</option>
+        </select>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" type="submit">Guardar</button>
+      <button class="btn" type="button" id="t_limpiar">Limpiar</button>
+    </div>
+    <div class="small" id="t_msg"></div>
+  </form>
+</div>
+
+<div class="card">
+  <div style="font-weight:700;margin-bottom:8px;">Tarifas</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Servicio</th><th>Costo</th><th>Especialidad</th><th>Estatus</th><th>Acciones</th></tr></thead>
+      <tbody id="tbTar">
+        </tbody>
+    </table>
+  </div>
+</div>
+
+    </main>
+  </div>
+
+  <script src="../js/app.js"></script>
+  <script>
+    requireAuth();
+    setActiveNav("tarifas");
+    document.getElementById("whoami").textContent = "";
+    document.getElementById("btnLogout").addEventListener("click", logout);
+  </script>
+  
+<script>
+  const $ = (id) => document.getElementById(id);
+  const frm = $("frmTar");
+  const tb = $("tbTar");
+  const msg = $("t_msg");
+
+  function renderEsp() {
+    const esp = list(STORAGE.ESPECIALIDADES);
+    const opts = [`<option>(Sin especialidad)</option>`].concat(
+      esp.map(e => `<option>${e.nombre}</option>`)
+    );
+    $("t_esp").innerHTML = opts.join("");
+  }
+
+  function limpiar() {
+    $("t_id").value = "";
+    frm.reset();
+    msg.textContent = "";
+    renderEsp();
+  }
+
+  function render() {
+    const esp = list(STORAGE.ESPECIALIDADES);
+    const items = list(STORAGE.TARIFAS);
+    tb.innerHTML = items.map(x => {
+      const e = x.especialidadId ? byId(esp, x.especialidadId) : null;
+      return `
+        <tr>
+          <td>${x.descripcion}</td>
+          <td>$${Number(x.costo).toFixed(2)}</td>
+          <td>${e ? e.nombre : "-"}</td>
+          <td><span class="pill">${x.estatus ? "Activa" : "Inactiva"}</span></td>
+          <td>
+            <button class="btn" onclick="editTar('${x.id}')">Editar</button>
+            <button class="btn danger" onclick="delTar('${x.id}')">Eliminar</button>
+          </td>
+        </tr>
+      `;
+    }).join("") || `<tr><td colspan="5" class="small">Sin registros</td></tr>`;
+  }
+
+  window.editTar = (id) => {
+    const x = byId(list(STORAGE.TARIFAS), id);
+    if (!x) return;
+    renderEsp();
+    $("t_id").value = x.id;
+    $("t_desc").value = x.descripcion;
+    $("t_costo").value = x.costo;
+    $("t_esp").value = x.especialidadId || "";
+    $("t_status").value = x.estatus ? "1" : "0";
+    msg.textContent = "Editando...";
+  };
+
+  window.delTar = (id) => {
+    if (!confirm("¿Eliminar tarifa?")) return;
+    removeById(STORAGE.TARIFAS, id);
+    logAction("Eliminó tarifa " + id, "Tarifas");
+    render();
+  };
+
+  frm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const id = $("t_id").value || uid("t");
+    const item = {
+      id,
+      descripcion: $("t_desc").value.trim(),
+      costo: Number($("t_costo").value || 0),
+      especialidadId: $("t_esp").value || null,
+      estatus: $("t_status").value === "1",
+    };
+    upsert(STORAGE.TARIFAS, item);
+    logAction((($("t_id").value) ? "Actualizó" : "Agregó") + " tarifa " + item.descripcion, "Tarifas");
+    msg.textContent = "Guardado ✅";
+    limpiar();
+    render();
+  });
+
+  $("t_limpiar").addEventListener("click", limpiar);
+
+  renderEsp();
+  render();
+</script>
+
+</body>
+</html>

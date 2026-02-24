@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Control de agenda</title>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">Clínica (Demo)</div>
+      <nav class="nav">
+        <a href="./dashboard.html" data-nav="dashboard">Dashboard</a>
+<a href="./pacientes.html" data-nav="pacientes">Control de pacientes</a>
+<a href="./agenda.html" data-nav="agenda">Control de agenda</a>
+<a href="./medicos.html" data-nav="medicos">Control de médicos</a>
+<a href="./especialidades.html" data-nav="especialidades">Especialidades médicas</a>
+<a href="./tarifas.html" data-nav="tarifas">Gestor de tarifas</a>
+<a href="./pagos.html" data-nav="pagos">Pagos</a>
+<a href="./reportes.html" data-nav="reportes">Reportes</a>
+<a href="./bitacoras.html" data-nav="bitacoras">Bitácoras de usuarios</a>
+      </nav>
+      <div style="margin-top:12px;">
+        <button class="btn" id="btnLogout">Cerrar sesión</button>
+        <div class="small" id="whoami" style="margin-top:8px;"></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <h1>Control de agenda</h1>
+      </div>
+
+      
+<div class="card">
+  <div style="font-weight:700;margin-bottom:8px;">Agregar / Editar cita</div>
+  <form id="frmCita">
+    <input type="hidden" id="c_id" />
+    <div class="grid">
+      <div class="field">
+        <label>Paciente</label>
+        <select id="c_paciente"></select>
+      </div>
+      <div class="field">
+        <label>Médico</label>
+        <select id="c_medico"></select>
+      </div>
+      <div class="field">
+        <label>Fecha y hora</label>
+        <input id="c_fecha" type="datetime-local" required />
+      </div>
+      <div class="field">
+        <label>Estado</label>
+        <select id="c_estado">
+          <option>Programada</option>
+          <option>Cancelada</option>
+          <option>Atendida</option>
+        </select>
+      </div>
+      <div class="field" style="grid-column:1/-1;">
+        <label>Motivo</label>
+        <input id="c_motivo" />
+      </div>
+      <div class="field" style="grid-column:1/-1;">
+        <label>Observaciones</label>
+        <input id="c_obs" />
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" type="submit">Guardar</button>
+      <button class="btn" type="button" id="c_limpiar">Limpiar</button>
+    </div>
+    <div class="small" id="c_msg"></div>
+  </form>
+</div>
+
+<div class="card">
+  <div style="font-weight:700;margin-bottom:8px;">Citas</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Fecha</th><th>Paciente</th><th>Médico</th><th>Estado</th><th>Motivo</th><th>Acciones</th></tr></thead>
+      <tbody id="tbCitas">
+        </tbody>
+    </table>
+  </div>
+</div>
+
+    </main>
+  </div>
+
+  <script src="../js/app.js"></script>
+  <script>
+    requireAuth();
+    setActiveNav("agenda");
+    document.getElementById("whoami").textContent = "";
+    document.getElementById("btnLogout").addEventListener("click", logout);
+  </script>
+  
+<script>
+  const $ = (id) => document.getElementById(id);
+  const frm = $("frmCita");
+  const tb = $("tbCitas");
+  const msg = $("c_msg");
+
+  function renderOptions() {
+    const pacientes = list(STORAGE.PACIENTES).filter(p => p.estatus);
+    const medicos = list(STORAGE.MEDICOS).filter(m => m.estatus);
+
+    $("c_paciente").innerHTML = pacientes.map(p => `<option>${p.nombre}</option>`).join("");
+    $("c_medico").innerHTML = medicos.map(m => `<option>${m.nombre}</option>`).join("");
+  }
+
+  function limpiar() {
+    $("c_id").value = "";
+    frm.reset();
+    msg.textContent = "";
+    renderOptions();
+  }
+
+  function render() {
+    const pacientes = list(STORAGE.PACIENTES);
+    const medicos = list(STORAGE.MEDICOS);
+    const citas = list(STORAGE.CITAS);
+
+    tb.innerHTML = citas.map(c => {
+      const p = byId(pacientes, c.pacienteId);
+      const m = byId(medicos, c.medicoId);
+      return `
+        <tr>
+          <td>${new Date(c.fechaCita).toLocaleString()}</td>
+          <td>${p ? p.nombre : "-"}</td>
+          <td>${m ? m.nombre : "-"}</td>
+          <td><span class="pill">${c.estado}</span></td>
+          <td>${c.motivo || ""}</td>
+          <td>
+            <button class="btn" onclick="editCita('${c.id}')">Editar</button>
+            <button class="btn danger" onclick="delCita('${c.id}')">Eliminar</button>
+          </td>
+        </tr>
+      `;
+    }).join("") || `<tr><td colspan="6" class="small">Sin registros</td></tr>`;
+  }
+
+  window.editCita = (id) => {
+    const c = byId(list(STORAGE.CITAS), id);
+    if (!c) return;
+    renderOptions();
+    $("c_id").value = c.id;
+    $("c_paciente").value = c.pacienteId;
+    $("c_medico").value = c.medicoId;
+    $("c_fecha").value = c.fechaCita;
+    $("c_estado").value = c.estado;
+    $("c_motivo").value = c.motivo || "";
+    $("c_obs").value = c.observaciones || "";
+    msg.textContent = "Editando...";
+  };
+
+  window.delCita = (id) => {
+    if (!confirm("¿Eliminar cita?")) return;
+    removeById(STORAGE.CITAS, id);
+    logAction("Eliminó cita " + id, "Agenda");
+    render();
+  };
+
+  frm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const id = $("c_id").value || uid("c");
+    const item = {
+      id,
+      pacienteId: $("c_paciente").value,
+      medicoId: $("c_medico").value,
+      fechaCita: $("c_fecha").value,
+      motivo: $("c_motivo").value.trim(),
+      estado: $("c_estado").value,
+      observaciones: $("c_obs").value.trim(),
+      fechaRegistro: nowISO(),
+    };
+    upsert(STORAGE.CITAS, item);
+    logAction((($("c_id").value) ? "Actualizó" : "Agregó") + " cita " + id, "Agenda");
+    msg.textContent = "Guardado ✅";
+    limpiar();
+    render();
+  });
+
+  $("c_limpiar").addEventListener("click", limpiar);
+
+  renderOptions();
+  render();
+</script>
+
+</body>
+</html>

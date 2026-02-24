@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Control de pacientes</title>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">Clínica (Demo)</div>
+      <nav class="nav">
+        <a href="./dashboard.html" data-nav="dashboard">Dashboard</a>
+<a href="./pacientes.html" data-nav="pacientes">Control de pacientes</a>
+<a href="./agenda.html" data-nav="agenda">Control de agenda</a>
+<a href="./medicos.html" data-nav="medicos">Control de médicos</a>
+<a href="./especialidades.html" data-nav="especialidades">Especialidades médicas</a>
+<a href="./tarifas.html" data-nav="tarifas">Gestor de tarifas</a>
+<a href="./pagos.html" data-nav="pagos">Pagos</a>
+<a href="./reportes.html" data-nav="reportes">Reportes</a>
+<a href="./bitacoras.html" data-nav="bitacoras">Bitácoras de usuarios</a>
+      </nav>
+      <div style="margin-top:12px;">
+        <button class="btn" id="btnLogout">Cerrar sesión</button>
+        <div class="small" id="whoami" style="margin-top:8px;"></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <h1>Control de pacientes</h1>
+      </div>
+
+      
+<div class="card">
+  <div style="font-weight:700;margin-bottom:8px;">Agregar / Editar paciente</div>
+
+  <form id="frmPaciente">
+    <input type="hidden" id="p_id" />
+
+    <div class="grid">
+      <div class="field">
+        <label>Nombre completo</label>
+        <input id="p_nombre" required />
+      </div>
+      <div class="field">
+        <label>CURP</label>
+        <input id="p_curp" />
+      </div>
+      <div class="field">
+        <label>Fecha nacimiento</label>
+        <input id="p_fnac" type="date" />
+      </div>
+      <div class="field">
+        <label>Sexo</label>
+        <select id="p_sexo">
+          <option>M</option>
+          <option>F</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Teléfono</label>
+        <input id="p_tel" />
+      </div>
+      <div class="field">
+        <label>Correo</label>
+        <input id="p_correo" type="email" />
+      </div>
+      <div class="field" style="grid-column:1/-1;">
+        <label>Dirección</label>
+        <input id="p_dir" />
+      </div>
+      <div class="field">
+        <label>Contacto emergencia</label>
+        <input id="p_contacto" />
+      </div>
+      <div class="field">
+        <label>Tel. emergencia</label>
+        <input id="p_tel_em" />
+      </div>
+      <div class="field" style="grid-column:1/-1;">
+        <label>Alergias</label>
+        <input id="p_alergias" />
+      </div>
+      <div class="field" style="grid-column:1/-1;">
+        <label>Antecedentes médicos</label>
+        <textarea id="p_ant"></textarea>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" type="submit">Guardar</button>
+      <button class="btn" type="button" id="btnLimpiar">Limpiar</button>
+    </div>
+    <div class="small" id="msgPaciente"></div>
+  </form>
+</div>
+
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+    <div style="font-weight:700;">Lista de pacientes</div>
+    <input id="qPaciente" placeholder="Buscar por nombre..." style="max-width:240px;padding:10px;border:1px solid var(--border);border-radius:10px;" />
+  </div>
+  <div class="table-wrap" style="margin-top:10px;">
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th><th>CURP</th><th>Teléfono</th><th>Correo</th><th>Estatus</th><th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tbPacientes">
+        </tbody>
+    </table>
+  </div>
+</div>
+
+    </main>
+  </div>
+
+  <script src="../js/app.js"></script>
+  <script>
+    requireAuth();
+    setActiveNav("pacientes");
+    document.getElementById("whoami").textContent = "";
+    document.getElementById("btnLogout").addEventListener("click", logout);
+  </script>
+  
+<script>
+  const $ = (id) => document.getElementById(id);
+
+  const frm = $("frmPaciente");
+  const msg = $("msgPaciente");
+  const tb = $("tbPacientes");
+  const q = $("qPaciente");
+
+  function limpiar() {
+    $("p_id").value = "";
+    frm.reset();
+    msg.textContent = "";
+  }
+
+  function render() {
+    const pacientes = list(STORAGE.PACIENTES);
+    const query = (q.value || "").toLowerCase();
+
+    const rows = pacientes
+      .filter(p => p.nombre.toLowerCase().includes(query))
+      .map(p => `
+        <tr>
+          <td>${p.nombre}</td>
+          <td>${p.curp || ""}</td>
+          <td>${p.telefono || ""}</td>
+          <td>${p.correo || ""}</td>
+          <td><span class="pill">${p.estatus ? "Activo" : "Inactivo"}</span></td>
+          <td>
+            <button class="btn" onclick="editPaciente('${p.id}')">Editar</button>
+            <button class="btn danger" onclick="delPaciente('${p.id}')">Eliminar</button>
+          </td>
+        </tr>
+      `).join("");
+
+    tb.innerHTML = rows || `<tr><td colspan="6" class="small">Sin registros</td></tr>`;
+  }
+
+  window.editPaciente = (id) => {
+    const p = byId(list(STORAGE.PACIENTES), id);
+    if (!p) return;
+    $("p_id").value = p.id;
+    $("p_nombre").value = p.nombre;
+    $("p_curp").value = p.curp || "";
+    $("p_fnac").value = p.fechaNacimiento || "";
+    $("p_sexo").value = p.sexo || "M";
+    $("p_tel").value = p.telefono || "";
+    $("p_correo").value = p.correo || "";
+    $("p_dir").value = p.direccion || "";
+    $("p_contacto").value = p.contactoEmergencia || "";
+    $("p_tel_em").value = p.telefonoEmergencia || "";
+    $("p_alergias").value = p.alergias || "";
+    $("p_ant").value = p.antecedentes || "";
+    msg.textContent = "Editando...";
+  };
+
+  window.delPaciente = (id) => {
+    if (!confirm("¿Eliminar paciente?")) return;
+    removeById(STORAGE.PACIENTES, id);
+    logAction("Eliminó paciente " + id, "Pacientes");
+    render();
+  };
+
+  frm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const id = $("p_id").value || uid("p");
+    const item = {
+      id,
+      nombre: $("p_nombre").value.trim(),
+      curp: $("p_curp").value.trim(),
+      fechaNacimiento: $("p_fnac").value,
+      sexo: $("p_sexo").value,
+      telefono: $("p_tel").value.trim(),
+      correo: $("p_correo").value.trim(),
+      direccion: $("p_dir").value.trim(),
+      contactoEmergencia: $("p_contacto").value.trim(),
+      telefonoEmergencia: $("p_tel_em").value.trim(),
+      alergias: $("p_alergias").value.trim(),
+      antecedentes: $("p_ant").value.trim(),
+      fechaRegistro: nowISO(),
+      estatus: true,
+    };
+
+    upsert(STORAGE.PACIENTES, item);
+    logAction((($("p_id").value) ? "Actualizó" : "Agregó") + " paciente " + item.nombre, "Pacientes");
+    msg.textContent = "Guardado ✅";
+    limpiar();
+    render();
+  });
+
+  $("btnLimpiar").addEventListener("click", limpiar);
+  q.addEventListener("input", render);
+
+  render();
+</script>
+
+</body>
+</html>

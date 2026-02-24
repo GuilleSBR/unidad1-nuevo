@@ -1,0 +1,191 @@
+*{
+  padding:0;
+  margin:0;
+  box-sizing:border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+:root{
+  --bg:#f6f7fb;
+  --card:#ffffff;
+  --text:#1f2937;
+  --muted:#6b7280;
+  --primary:royalblue;
+  --border:#e5e7eb;
+}
+body{
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+
+/* =========================
+   LOGIN (tu diseño original)
+   ========================= */
+body.login-page{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+body.login-page form{
+  width:300px;
+  height:380px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  box-shadow: 0 10px 25px rgba(0,0,0,.12);
+  border-radius:20px;
+  background:var(--card);
+  border:1px solid var(--border);
+}
+body.login-page form img{ width:100px; height:100px; }
+body.login-page form input[type="text"],
+body.login-page form input[type="password"]{
+  outline:0;
+  border:1px solid var(--border);
+  width:80%;
+  padding:10px;
+  border-radius:10px;
+}
+body.login-page form label{ font-weight:500; padding:10px; }
+.box-visible{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  color:var(--muted);
+  padding:8px 0;
+}
+body.login-page form button{
+  outline:0;
+  border:0;
+  background-color:var(--primary);
+  border-radius:20px;
+  cursor:pointer;
+  width:250px;
+  padding:10px;
+  transition: all .2s ease-in-out;
+  color:#fff;
+  font-weight:600;
+}
+body.login-page form button:hover{ opacity:.85; }
+.helper-text{ font-size:12px; color:var(--muted); margin-top:8px; }
+
+/* =========================
+   APP LAYOUT
+   ========================= */
+.layout{
+  display:grid;
+  grid-template-columns: 240px 1fr;
+  min-height:100vh;
+}
+.sidebar{
+  background:var(--card);
+  border-right:1px solid var(--border);
+  padding:16px;
+}
+.brand{
+  font-weight:800;
+  letter-spacing:.3px;
+  margin-bottom:14px;
+}
+.nav a{
+  display:block;
+  text-decoration:none;
+  color:var(--text);
+  padding:10px 12px;
+  border-radius:10px;
+  margin-bottom:6px;
+  border:1px solid transparent;
+}
+.nav a.active{
+  background:#eef2ff;
+  border-color:#c7d2fe;
+  color:#1e3a8a;
+}
+.nav a:hover{ background:#f3f4f6; }
+
+.main{
+  padding:18px;
+}
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:16px;
+}
+.topbar h1{ font-size:20px; }
+.btn{
+  border:1px solid var(--border);
+  background:var(--card);
+  padding:8px 12px;
+  border-radius:10px;
+  cursor:pointer;
+}
+.btn.primary{
+  background:var(--primary);
+  border-color:var(--primary);
+  color:#fff;
+}
+.btn.danger{
+  background:#ef4444;
+  border-color:#ef4444;
+  color:#fff;
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:14px;
+}
+.grid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap:10px;
+}
+.field label{
+  display:block;
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:4px;
+}
+.field input, .field select, .field textarea{
+  width:100%;
+  padding:10px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  outline:0;
+  background:#fff;
+}
+.field textarea{ min-height:80px; resize:vertical; }
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+.table-wrap{ overflow:auto; }
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:700px;
+}
+th, td{
+  padding:10px;
+  border-bottom:1px solid var(--border);
+  text-align:left;
+  font-size:14px;
+}
+th{ color:var(--muted); font-weight:700; }
+.small{ font-size:12px; color:var(--muted); }
+.pill{
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  font-size:12px;
+}
