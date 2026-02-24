@@ -16,5 +16,5 @@ $form.addEventListener("submit", (e) => {
   e.preventDefault();
 
   // Entrar directo al dashboard
-  window.location.href = "./pages/dashboard.html";
+  window.location.href = "./paginas/dashboard.html";
 });
