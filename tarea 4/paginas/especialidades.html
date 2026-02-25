@@ -123,7 +123,7 @@
     const item = { id, nombre: $("e_nombre").value.trim(), descripcion: $("e_desc").value.trim() };
     upsert(STORAGE.ESPECIALIDADES, item);
     logAction((($("e_id").value) ? "Actualizó" : "Agregó") + " especialidad " + item.nombre, "Especialidades");
-    msg.textContent = "Guardado ✅";
+    msg.textContent = "Guardado";
     limpiar();
     render();
   });

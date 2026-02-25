@@ -210,7 +210,7 @@
 
     upsert(STORAGE.PACIENTES, item);
     logAction((($("p_id").value) ? "Actualizó" : "Agregó") + " paciente " + item.nombre, "Pacientes");
-    msg.textContent = "Guardado ✅";
+    msg.textContent = "Guardado";
     limpiar();
     render();
   });

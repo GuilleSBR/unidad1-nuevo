@@ -160,7 +160,7 @@
     };
     upsert(STORAGE.TARIFAS, item);
     logAction((($("t_id").value) ? "Actualizó" : "Agregó") + " tarifa " + item.descripcion, "Tarifas");
-    msg.textContent = "Guardado ✅";
+    msg.textContent = "Guardado";
     limpiar();
     render();
   });

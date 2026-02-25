@@ -74,7 +74,6 @@
   <script>
     requireAuth();
     setActiveNav("dashboard");
-    // Esqueleto: no mostramos información de sesión
     document.getElementById("whoami").textContent = "";
     document.getElementById("btnLogout").addEventListener("click", logout);
   </script>
@@ -90,7 +89,6 @@
   document.getElementById("kpiPagos").textContent = pagos.length;
 
   const tb = document.getElementById("tbBitacora");
-  // Esqueleto: bitácora vacía (sin registros)
   tb.innerHTML = "";
 </script>
 

@@ -175,7 +175,7 @@
     };
     upsert(STORAGE.MEDICOS, item);
     logAction((($("m_id").value) ? "Actualizó" : "Agregó") + " médico " + item.nombre, "Médicos");
-    msg.textContent = "Guardado ✅";
+    msg.textContent = "Guardado";
     limpiar();
     render();
   });
