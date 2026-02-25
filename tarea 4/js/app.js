@@ -1,8 +1,3 @@
-/* app.js
-   - Guarda datos en localStorage (solo front-end)
-   - Valida login y protege pantallas
-   - CRUD básico para módulos: pacientes, médicos, citas, etc.
-*/
 
 const STORAGE = {
   SESSION: "clinica_session",
@@ -38,12 +33,8 @@ function uid(prefix = "id") {
   return prefix + "_" + Math.random().toString(16).slice(2) + "_" + Date.now();
 }
 
-/* =========================
-   STORAGE (inicialización vacía)
-   ========================= */
 function initEmptyStorage() {
-  // ESQUELETO: siempre iniciamos vacío (sin datos precargados)
-  // Esto evita que aparezcan registros viejos guardados en el navegador.
+
   const emptyKeys = [
     STORAGE.PACIENTES,
     STORAGE.MEDICOS,
@@ -61,9 +52,6 @@ function initEmptyStorage() {
 }
 initEmptyStorage();
 
-/* =========================
-   AUTH / BITÁCORA
-   ========================= */
 function getSession() {
   return readJSON(STORAGE.SESSION, null);
 }
@@ -77,13 +65,9 @@ function clearSession() {
 }
 
 function logAction(accion, modulo) {
-  // ESQUELETO: bitácora desactivada (sin registros)
   return;
 }
 
-/* =========================
-   LAYOUT (sidebar)
-   ========================= */
 function setActiveNav(currentKey) {
   document.querySelectorAll("[data-nav]").forEach(a => {
     if (a.getAttribute("data-nav") === currentKey) a.classList.add("active");

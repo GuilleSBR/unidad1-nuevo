@@ -8,7 +8,6 @@
 <body>
   <div class="layout">
     <aside class="sidebar">
-      <div class="brand">Clínica (Demo)</div>
       <nav class="nav">
         <a href="./dashboard.html" data-nav="dashboard">Dashboard</a>
 <a href="./pacientes.html" data-nav="pacientes">Control de pacientes</a>
@@ -33,7 +32,7 @@
 
       
 <div class="card">
-  <div style="font-weight:700;margin-bottom:8px;">Generar reporte (demo)</div>
+  <div style="font-weight:700;margin-bottom:8px;">Generar reporte</div>
   <form id="frmRep">
     <div class="grid">
       <div class="field">
@@ -110,7 +109,7 @@
   window.verRep = (id) => {
     const r = byId(list(STORAGE.REPORTES), id);
     if (!r) return;
-    alert("Reporte (demo)\n\nTipo: " + r.tipo + "\nFecha: " + new Date(r.fechaGeneracion).toLocaleString() + "\nDescripción: " + (r.descripcion||""));
+    alert("Reporte\n\nTipo: " + r.tipo + "\nFecha: " + new Date(r.fechaGeneracion).toLocaleString() + "\nDescripción: " + (r.descripcion||""));
   };
 
   window.delRep = (id) => {
@@ -129,11 +128,11 @@
       descripcion: $("r_desc").value.trim(),
       fechaGeneracion: nowISO(),
       generadoPor: s ? s.usuario : "N/A",
-      rutaArchivo: null, // en un sistema real aquí iría la ruta del PDF/CSV
+      rutaArchivo: null,
     };
     upsert(STORAGE.REPORTES, item);
     logAction("Generó reporte " + item.tipo, "Reportes");
-    msg.textContent = "Reporte generado ✅ (solo demo)";
+    msg.textContent = "Reporte generado";
     limpiar();
     render();
   });
